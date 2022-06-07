@@ -1,14 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django import forms
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import  HttpResponseRedirect
 from django.urls import reverse
 import markdown2 as mk
-import html
 import random
 from .models import Procedimiento
 from .forms import MyForm, NewPageForm
-from . import util
-import re
 
 
 def index(request):
