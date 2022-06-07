@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django import forms
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 import markdown2 as mk
 import html
 import random
@@ -23,10 +24,10 @@ def index(request):
             name = form.cleaned_data['Entry'].lower()
             # print(name)
             entry = Procedimiento.objects.filter(title=name).first()
-            # print(entry)
             if entry != None:
                 # print(entry,'---')
-                return redirect(f'/wiki/{name}')
+                # return redirect(f'/wiki/{name}')
+                return HttpResponseRedirect(reverse('wiki',args=(name,)))
             else:
 
                 l = [e.serialize() for e in Procedimiento.objects.all() if e.title.lower().startswith(name)]# if name in e.title.lower()]
@@ -75,11 +76,14 @@ def wiki(request,name):
 
 def random_page(request):
     '''Esta funcion devuelve una wiki aleatoria de las existentes  '''
-    l = [entry.serialize()['title'] for entry in Procedimiento.objects.all()]
+    # l = [entry.serialize()['title'] for entry in Procedimiento.objects.all()]
+    l = [entry for entry in Procedimiento.objects.all()]
 
     num = random.randint(0,len(l)-1)
-    print(l[num])
-    return redirect(f'wiki/{l[num]}')
+    entry = l[num]
+    print(l[num].title)
+    return HttpResponseRedirect(reverse('wiki',args=(entry.title,)))
+    # return redirect(f'wiki/{l[num]}')
 
 def new_page(request):
     '''Esta funcion nos permite crear nuestra propia wiki, llenando un titulo
@@ -105,7 +109,8 @@ def new_page(request):
                 entry = Procedimiento.objects.create(title=title,content=content)
                 entry.save()
                 print(entry,'----')
-                return redirect(f'/wiki/{title}')
+                # return redirect(f'/wiki/{title}')
+                return HttpResponseRedirect(reverse('wiki',args=(entry.title,)))
     return render(request, 'encyclopedia/new_page.html', {
         'form':form,
         'newPageForm':NewPageForm()
@@ -129,7 +134,8 @@ def edit(request):
             entry.content = content
             
             entry.save()
-            return redirect(f'/wiki/{title}')
+            # return redirect(f'/wiki/{title}')
+            return HttpResponseRedirect(reverse('wiki',arg=(title,)))
     print('get')
     referencia = request.headers['Referer']
     print(referencia)
