@@ -1,0 +1,16 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Encyclopedia
+{% endblock %}
+
+{% block body %}
+    <h1>Procedimientos</h1>
+
+    <ul>
+        {% for entry in entries %}
+        <li><a href="wiki/{{entry.title}}">{{ entry.title }}</a></li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

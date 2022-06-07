@@ -1,0 +1,19 @@
+{% extends 'encyclopedia/layout.html' %}
+{% block title %}
+Crear Procedimiento
+{% endblock %}
+
+{% block body %}
+{% if  error  %}
+  <div class="alert alert-danger" role="alert">
+    {{error}}
+  </div>
+{% endif %}
+<form action="{% url 'new_page' %}" method="post">
+  {% csrf_token %}
+  {{ newPageForm.as_p }}
+  <br>
+  <input type="submit" name="submit" value="submit">
+</form>
+
+{% endblock %}
