@@ -13,7 +13,8 @@ class Procedimiento(models.Model):
 
     def serialize(self):
         content = mk.markdown(self.content)
-        title = str(self.title).lower()
+        # title = str(self.title).lower()
+        title = str(self.title)
         return {
             'title':title,
             'content':content,

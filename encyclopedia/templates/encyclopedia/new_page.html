@@ -9,7 +9,7 @@ Crear Procedimiento
     {{error}}
   </div>
 {% endif %}
-<form action="{% url 'new_page' %}" method="post">
+<form action="{% url 'ency:new_page' %}" method="post">
   {% csrf_token %}
   {{ newPageForm.as_p }}
   <br>

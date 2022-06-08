@@ -8,26 +8,36 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'encyclopedia/styles.css' %}" rel="stylesheet">
     </head>
-    <body>
+    <body> {% if user.is_authenticated %}
+        <div>Logged: {{ user }}</div>
+    {% else %}
+        <div>Not Logged</div>
+    {% endif %}
+
         <div class="row">
+           
             <div class="sidebar col-lg-2 col-md-3">
                 <h2>Wiki-CNS</h2>
-                <form action="{% url 'index' %}" method="post">
+                <form action="{% url 'ency:index' %}" method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
                 </form>
                 <div>
-                    <a href="{% url 'index' %}">Home</a>
+                    <a href="{% url 'ency:index' %}">Home</a>
                 </div>
+                {% if user.is_authenticated %}
                 <div>
-                    <a href="{% url 'new_page' %}">Crear Nuevo Procedimiento</a>
+                    <a href="{% url 'ency:new_page' %}">Crear Nuevo Procedimiento</a>
                 </div>
+                {% endif %}
                 <div>
-                    <a href="{% url 'random_page' %}">Procedimiento Random</a>
+                    <a href="{% url 'ency:random_page' %}">Procedimiento Random</a>
                 </div>
                 {% block nav %}
                 {% endblock %}
+               
             </div>
+         
             <div class="main col-lg-10 col-md-9">
                 {% block body %}
                 {% endblock %}
