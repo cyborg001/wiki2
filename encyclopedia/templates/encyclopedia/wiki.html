@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block body %}
-   <div><pre>{{ content|safe }}</pre></div> 
+   <div><pre>{{ pre_text|safe }}</pre></div> 
     
         <div class="edit_entry">
             <br><br><br><hr>
     {% if user.is_authenticated %}
-            <a href="{% url 'ency:edit' %}">Click aqui para editar</a>
+            <a href="{% url 'ency:edit' procedimiento.pk %}">Click aqui para editar</a>
         </div>
     {% endif %}
 {% endblock %}

@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.http import  HttpResponseRedirect
 from django.urls import reverse
+from django.views import generic
 import markdown2 as mk
 import random
 from .models import Procedimiento
 from .forms import MyForm, NewPageForm
 
 
-def index(request):
+"""def index(request):
+
     '''si el metodo es POST y los datos son validos investiga si la wiki
         digitada existe, si existe nos redirecciona a ella, sino nos envia
         una lista con todas las wikis cuyo nombre contegan la substring
@@ -39,9 +41,18 @@ def index(request):
         "entries":entries,
         'form':MyForm(),
     })
+"""
+class IndexView(generic.ListView):
+    template_name = 'encyclopedia/index.html'
+    context_object_name = 'procedimiento_list'
+    
+    def get_queryset(self):
+        return Procedimiento.objects.all()
 
 
-def wiki(request,name):
+
+""" def wiki(request,name):
+
     '''esta funcion que acepta request y a name como parametro se
         asegura de devolver la wiki en formato html para que pueda ser
         visualizada por los usuarios. si la wiki no existe devuelve
@@ -65,13 +76,27 @@ def wiki(request,name):
         'content':contenido,
         'form':form,
     })
+    """
+
+class WikiView(generic.DetailView):
+    model = Procedimiento
+    template_name = 'encyclopedia/wiki.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        title = context['object'].title
+        content = context['object'].content
+        pre_text = mk.markdown(f'# {title} \n{content}')
+        context['pre_text'] = pre_text
+        return context
+
 def random_page(request):
     '''Esta funcion devuelve una wiki aleatoria de las existentes  '''
     l = [entry for entry in Procedimiento.objects.all()]
     num = random.randint(0,len(l)-1)
     entry = l[num]
-    print(l[num].title)
-    return HttpResponseRedirect(reverse('ency:wiki',args=(entry.title,)))
+    print(l[num].pk)
+    return HttpResponseRedirect(reverse('ency:wiki',args=(entry.pk,)))
 
 def new_page(request):
     '''Esta funcion nos permite crear nuestra propia wiki, llenando un titulo
@@ -96,18 +121,18 @@ def new_page(request):
             else:
                 entry = Procedimiento.objects.create(title=title,content=content)
                 entry.save()
-                return HttpResponseRedirect(reverse('ency:wiki',args=(entry.title,)))
+                return HttpResponseRedirect(reverse('ency:wiki',args=(entry.pk,)))
 
     return render(request, 'encyclopedia/new_page.html', {
         'form':form,
         'newPageForm':NewPageForm()
     })
 
-def edit(request):
+def edit(request,pk):
     '''Esta funcion nos permite editar una pagina visitada dandole al link
         "click hera for edit page" nos permite ir a una pagina para la ediccion
         de nuestra wiki'''
-
+    print(pk)
     form = MyForm()
     newPageForm = NewPageForm(request.POST)
     if request.method == 'POST':
@@ -117,12 +142,14 @@ def edit(request):
             entry = Procedimiento.objects.get(title=title)
             entry.content = content
             entry.save()
-            return HttpResponseRedirect(reverse('ency:wiki',args=(title,)))
-    title = request.headers['Referer'].split('/')[-1]
-    entry = Procedimiento.objects.get(title=title)
-    request.POST ={'title':entry.title,'content':entry.content}
+            return HttpResponseRedirect(reverse('ency:wiki',args=(pk,)))
+    
+    # title = request.headers['Referer'].split('/')[-1]
+    entry = Procedimiento.objects.get(pk=pk)
+    request.POST ={'title':entry.title,'content':entry.content, 'pk':entry.pk}
     return render(request, 'encyclopedia/edit.html', {
         'form': form,
         'newPageForm':NewPageForm(request.POST),
         'error':'',
+        'pk':pk,
     })

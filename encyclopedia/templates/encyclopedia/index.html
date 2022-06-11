@@ -2,15 +2,15 @@
 
 {% block title %}
     Encyclopedia
+    
 {% endblock %}
 
 {% block body %}
     <h1>Procedimientos</h1>
-
     <ul>
-        {% for entry in entries %}
+        {% for entry in procedimiento_list %}
         <!-- <li><a href="wiki/{{entry.title}}">{{ entry.title }}</a></li> -->
-        <li><a href="{% url 'ency:wiki'  entry.title %}">{{ entry.title }}</a></li>
+        <li><a href="{% url 'ency:wiki'  entry.pk %}">{{ entry.title }}</a></li>
         {% endfor %}
     </ul>
 
