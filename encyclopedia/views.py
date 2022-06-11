@@ -8,40 +8,7 @@ from .models import Procedimiento
 from .forms import MyForm, NewPageForm
 
 
-"""def index(request):
 
-    '''si el metodo es POST y los datos son validos investiga si la wiki
-        digitada existe, si existe nos redirecciona a ella, sino nos envia
-        una lista con todas las wikis cuyo nombre contegan la substring
-        digitada. por otro lado si el metodo es GET entonces nos envia a
-        una lista con todas las wikis existentes'''
-
-    form = MyForm(request.POST)
-    if request.method == 'POST':
-        if form.is_valid():
-            name = form.cleaned_data['Entry']
-            entry = Procedimiento.objects.filter(title=name).first()
-            if entry != None:
-                return HttpResponseRedirect(reverse('wiki',args=(name,)))
-            else:
-                l = [e.serialize() for e in Procedimiento.objects.all() if e.title.lower().startswith(name.lower())]# if name in e.title.lower()]
-                return render(request,'encyclopedia/index.html',{
-                    'entries':l,
-                    'form':MyForm()
-                })
-
-        else:
-            return render(request,'encyclopedia/index.html',{
-                'form':form
-            })
-    entries = Procedimiento.objects.all()
-    
-    entries = [procedimiento.serialize() for procedimiento in entries]
-    return render(request,'encyclopedia/index.html',{
-        "entries":entries,
-        'form':MyForm(),
-    })
-"""
 class IndexView(generic.ListView):
     template_name = 'encyclopedia/index.html'
     context_object_name = 'procedimiento_list'
@@ -50,33 +17,6 @@ class IndexView(generic.ListView):
         return Procedimiento.objects.all()
 
 
-
-""" def wiki(request,name):
-
-    '''esta funcion que acepta request y a name como parametro se
-        asegura de devolver la wiki en formato html para que pueda ser
-        visualizada por los usuarios. si la wiki no existe devuelve
-        un error diciendo que la wiki no fue encontrada'''
-        
-    form = MyForm()
-    procedimiento = Procedimiento.objects.filter(title=name)
-    print(procedimiento)
-    if procedimiento.first() == None or procedimiento.first() == '':
-        print('es nulo')
-        return render(request, 'encyclopedia/wiki.html', {
-            'entry':f'Error the {name} page was not found.',
-            'name':'Error',
-            'form':form,
-        })
-    entry = procedimiento.first() 
-    title = entry.title.capitalize()
-    contenido = mk.markdown(f'# {title} \n{entry.content}')
-    return render(request, 'encyclopedia/wiki.html', {
-        'entry':entry,
-        'content':contenido,
-        'form':form,
-    })
-    """
 
 class WikiView(generic.DetailView):
     model = Procedimiento
