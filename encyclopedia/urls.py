@@ -12,4 +12,6 @@ urlpatterns = [
     path('new_page', views.new_page, name='new_page'),
     path('edit/<int:pk>',views.edit, name='edit'),
     path('logout',views.loggout, name = 'logout'),
+    path('login',views.loggin, name = 'login'),
+
 ]

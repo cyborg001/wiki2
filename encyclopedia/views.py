@@ -1,3 +1,5 @@
+import http
+from http.client import REQUEST_ENTITY_TOO_LARGE
 from django.shortcuts import render
 from django.http import  HttpResponseRedirect
 from django.urls import reverse
@@ -6,12 +8,44 @@ import markdown2 as mk
 import random
 from .models import Procedimiento
 from .forms import MyForm, NewPageForm
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate, login
 
 
 def loggout(request):
     logout(request)
     return HttpResponseRedirect(reverse('ency:index'))
+
+def loggin(request):
+    if request.method == 'POST':
+        print('espost')
+        previa = request.POST['fprevia']
+        
+        page = previa.split(request.headers['Origin'])[-1]
+        username = request.POST['fusername']
+        password = request.POST['fpassword']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirect to a success page.
+            # return render(request, previa)
+            print(page)
+            if page != '/' and page != '/edit':
+                return HttpResponseRedirect(reverse(f'ency:wiki',args=(int(page[1:]),)))
+            else:
+                return HttpResponseRedirect(reverse('ency:index'))
+            
+        else:
+            
+            print('distinto')
+            context = {'username':username,
+                        'password':password,
+                        'error': 'Usuario o contraseña incorrecta!',
+                        "previa":previa}
+            return render(request,'encyclopedia/login.html',context)
+            
+    print(request.headers['Referer'])
+    
+    return render(request, 'encyclopedia/login.html',{'previa':request.headers['Referer']})
 
 class IndexView(generic.ListView):
     template_name = 'encyclopedia/index.html'
@@ -39,7 +73,7 @@ def random_page(request):
     l = [entry for entry in Procedimiento.objects.all()]
     num = random.randint(0,len(l)-1)
     entry = l[num]
-    print(l[num].pk)
+    # print(l[num].pk)
     return HttpResponseRedirect(reverse('ency:wiki',args=(entry.pk,)))
 
 def new_page(request):

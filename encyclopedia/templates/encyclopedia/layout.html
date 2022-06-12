@@ -7,18 +7,38 @@
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'encyclopedia/styles.css' %}" rel="stylesheet">
+        <style>
+            #divlogin {
+                height: 3em;
+                background-color: black;
+                text-align: right; 
+                padding-right: 2em;
+                background-image: ;
+            }
+            #spanlogin {
+                color: aqua;
+
+            }
+        </style>
     </head>
-    <body> {% if user.is_authenticated %}
-        <div >
-            <span style="background-color:lightgray">Logged: {{ user }}</span><br>
-            <span><a href="{% url 'ency:logout' %}">Logout</a><span>
+    <body>
+        <div id="divbanner">
+            <img src="{% static 'encyclopedia/images/banner_sismologico.jpg' %}" alt="Escudos de la UASD y el CNS" width="100%">
         </div>
-    {% else %}
-        <div>Not Logged</div>
-    {% endif %}
+        {% if user.is_authenticated %}
+            <div id="divlogin" >
+                <span id="spanlogin">Logged: {{ user }}</span><br>
+                <span><a href="{% url 'ency:logout' %}">Logout</a><span>
+            </div>
+        {% else %}
+            <div id="divlogin" >
+                <span id="spanlogin"> Not Logged </span>  <br>
+                <a href="{% url 'ency:login' %}">Logearse aqui</a>
+            </div>
+        {% endif %}
 
         <div class="row">
-           
+            
             <div class="sidebar col-lg-2 col-md-3">
                 <h2>Wiki-CNS</h2>
                 <form action="{% url 'ency:index' %}" method="post">
@@ -38,9 +58,9 @@
                 </div>
                 {% block nav %}
                 {% endblock %}
-               
+                
             </div>
-         
+            
             <div class="main col-lg-10 col-md-9">
                 {% block body %}
                 {% endblock %}
