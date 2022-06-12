@@ -2,7 +2,7 @@ import http
 from http.client import REQUEST_ENTITY_TOO_LARGE
 from django.shortcuts import render
 from django.http import  HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 import markdown2 as mk
 import random
@@ -131,3 +131,7 @@ def edit(request,pk):
         'error':'',
         'pk':pk,
     })
+
+class ProcedimientoDeleteView(generic.DeleteView):
+    model = Procedimiento
+    success_url = reverse_lazy('ency:index')
