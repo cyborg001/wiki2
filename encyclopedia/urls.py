@@ -14,5 +14,6 @@ urlpatterns = [
     path('delete/<int:pk>',views.ProcedimientoDeleteView.as_view(), name='delete'),
     path('logout',views.loggout, name = 'logout'),
     path('login',views.loggin, name = 'login'),
+    path('buscar',views.buscar,name='buscar'),
 
 ]

@@ -13,7 +13,6 @@
                 background-color: black;
                 text-align: right; 
                 padding-right: 2em;
-                background-image: ;
             }
             #spanlogin {
                 color: aqua;
@@ -33,7 +32,7 @@
         {% else %}
             <div id="divlogin" >
                 <span id="spanlogin"> Not Logged </span>  <br>
-                <a href="{% url 'ency:login' %}">Logearse aqui</a>
+                <a href="{% url 'ency:login' %}">Loguearse aqui</a>
             </div>
         {% endif %}
 
@@ -41,16 +40,20 @@
             
             <div class="sidebar col-lg-2 col-md-3">
                 <h2>Wiki-CNS</h2>
-                <form action="{% url 'ency:index' %}" method="post">
+                 <form action="{% url 'ency:buscar' %}" method="post">
                     {% csrf_token %}
-                    {{ form.as_p }}
+                    <!-- {{ form.as_p }} -->
+                    <label for="procedimiento">Procedimiento</label>
+                    <input type="text" id="procedimiento" name="procedimiento">
+                    <input type="submit" value="aceptar">
                 </form>
+                <hr>
                 <div>
                     <a href="{% url 'ency:index' %}">Home</a>
                 </div>
                 {% if user.is_authenticated %}
                 <div>
-                    <a href="{% url 'ency:new_page' %}">Crear Nuevo Procedimiento</a>
+                    <a href="{% url 'ency:new_page' %}">Nuevo Procedimiento</a>
                 </div>
                 {% endif %}
                 <div>
