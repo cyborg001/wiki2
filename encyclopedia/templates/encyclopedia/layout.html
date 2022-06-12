@@ -9,7 +9,10 @@
         <link href="{% static 'encyclopedia/styles.css' %}" rel="stylesheet">
     </head>
     <body> {% if user.is_authenticated %}
-        <div>Logged: {{ user }}</div>
+        <div >
+            <span style="background-color:lightgray">Logged: {{ user }}</span><br>
+            <span><a href="{% url 'ency:logout' %}">Logout</a><span>
+        </div>
     {% else %}
         <div>Not Logged</div>
     {% endif %}

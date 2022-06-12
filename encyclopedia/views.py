@@ -6,8 +6,12 @@ import markdown2 as mk
 import random
 from .models import Procedimiento
 from .forms import MyForm, NewPageForm
+from django.contrib.auth import logout
 
 
+def loggout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('ency:index'))
 
 class IndexView(generic.ListView):
     template_name = 'encyclopedia/index.html'
