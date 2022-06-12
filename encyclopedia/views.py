@@ -19,7 +19,6 @@ def buscar(request):
     for n in procedimientos:
 
         if name == n.title:
-            print(n.pk)
             return HttpResponseRedirect(reverse('ency:wiki',args=(n.pk,)))
         else:
             if name in n.title:
