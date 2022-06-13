@@ -1,4 +1,3 @@
-import http
 from http.client import REQUEST_ENTITY_TOO_LARGE
 from django.shortcuts import render
 from django.http import  HttpResponseRedirect
