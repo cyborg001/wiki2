@@ -1,14 +1,32 @@
 from http.client import REQUEST_ENTITY_TOO_LARGE
 from django.shortcuts import render
 from django.http import  HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 import markdown2 as mk
 import random
 from .models import Procedimiento
 from .forms import MyForm, NewPageForm
+from django.views.generic.edit import FormView
 from django.contrib.auth import logout, authenticate, login
 
+def buscar(request):
+    name = request.POST['procedimiento']
+    procedimientos = Procedimiento.objects.all()
+    lista = []
+    print(name)
+    for n in procedimientos:
+
+        if name == n.title:
+            return HttpResponseRedirect(reverse('ency:wiki',args=(n.pk,)))
+        else:
+            if name in n.title:
+                lista.append(n)
+    if lista != []:
+        return render(request,'encyclopedia/index.html',{"procedimiento_list":lista})
+    else:
+        return HttpResponseRedirect(reverse('ency:index'))
+    pass
 
 def loggout(request):
     logout(request)
@@ -37,7 +55,6 @@ def loggin(request):
             
             print('distinto')
             context = {'username':username,
-                        'password':password,
                         'error': 'Usuario o contraseña incorrecta!',
                         "previa":previa}
             return render(request,'encyclopedia/login.html',context)
@@ -58,7 +75,7 @@ class IndexView(generic.ListView):
 class WikiView(generic.DetailView):
     model = Procedimiento
     template_name = 'encyclopedia/wiki.html'
-
+   
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         title = context['object'].title
@@ -91,7 +108,7 @@ def new_page(request):
             if Procedimiento.objects.filter(title=title).first() != None:
                 # print()
                 return render(request, 'encyclopedia/new_page.html', {
-                    'form':form,
+                    # 'form':form,  
                     'newPageForm':newPageForm,
                     'error':'Error the entry already exists!',
                 })
@@ -101,7 +118,7 @@ def new_page(request):
                 return HttpResponseRedirect(reverse('ency:wiki',args=(entry.pk,)))
 
     return render(request, 'encyclopedia/new_page.html', {
-        'form':form,
+        # 'form':form,
         'newPageForm':NewPageForm()
     })
 
@@ -130,3 +147,7 @@ def edit(request,pk):
         'error':'',
         'pk':pk,
     })
+
+class ProcedimientoDeleteView(generic.DeleteView):
+    model = Procedimiento
+    success_url = reverse_lazy('ency:index')

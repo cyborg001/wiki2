@@ -11,7 +11,9 @@ urlpatterns = [
     path('random_page',views.random_page, name='random_page'),
     path('new_page', views.new_page, name='new_page'),
     path('edit/<int:pk>',views.edit, name='edit'),
+    path('delete/<int:pk>',views.ProcedimientoDeleteView.as_view(), name='delete'),
     path('logout',views.loggout, name = 'logout'),
     path('login',views.loggin, name = 'login'),
+    path('buscar',views.buscar,name='buscar'),
 
 ]
